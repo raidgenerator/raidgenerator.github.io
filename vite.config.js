@@ -9,7 +9,7 @@ const English = require('./src/locales/en.json')
 const convertFormats = ['give-command', 'loot-table', 'item-modifier', 'recipe-output']
 
 export default defineConfig({
-    base: "https://necro50n3.github.io/raidgenerator.github.io/",
+    base: "/",
 	server: {
 		port: 3000,
 	},
