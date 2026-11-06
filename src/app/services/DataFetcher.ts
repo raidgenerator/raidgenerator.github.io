@@ -223,7 +223,7 @@ export async function fetchResources(versionId: VersionId) {
 			fetch(`${mcmeta(version, 'atlas')}/all/data.min.json`).then(r => r.json()),
 			loadImage(`${mcmeta(version, 'atlas')}/all/atlas.png`),
 			// Always download the 1.21.4 item models for the version range 1.20.5 - 1.21.3
-			needsItemModels ? fetchAllPresets(hasItemModels ? versionId : '1.21.4', 'item_definition') : new Map<string, unknown>(),
+			needsItemModels ? fetchAllPresets(hasItemModels ? versionId : '1.21.1', 'item_definition') : new Map<string, unknown>(),
 		])
 		return { blockDefinitions, models, uvMapping, atlas, itemDefinitions }
 	} catch (e) {

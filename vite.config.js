@@ -57,7 +57,7 @@ export default defineConfig({
 		stringify: true,
 	},
 	define: {
-		__LATEST_VERSION__: env.latest_version,
+		__LATEST_VERSION__: JSON.stringify('1.21.1'),
 	},
 	plugins: [
 		preact(),
