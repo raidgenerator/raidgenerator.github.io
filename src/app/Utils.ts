@@ -10,7 +10,7 @@ import config from './Config.js'
 import type { VersionId } from './services/index.js'
 import { checkVersion } from './services/index.js'
 
-export const SOURCE_REPO_URL = 'https://github.com/misode/misode.github.io'
+export const SOURCE_REPO_URL = 'https://github.com/necro50n3/raidgenerator.github.io'
 
 export function isPromise(obj: any): obj is Promise<any> {
 	return typeof (obj as any)?.then === 'function' 

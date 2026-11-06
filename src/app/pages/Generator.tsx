@@ -8,8 +8,6 @@ import type { VersionId } from '../services/index.js'
 import { checkVersion } from '../services/index.js'
 import { getGenerator } from '../Utils.js'
 
-export const SHARE_KEY = 'share'
-
 interface Props {
 	default?: true,
 }

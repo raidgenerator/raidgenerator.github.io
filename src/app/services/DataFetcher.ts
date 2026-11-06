@@ -1,5 +1,4 @@
 import config from '../Config.js'
-import { Store } from '../Store.js'
 import { message } from '../Utils.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
@@ -15,7 +14,6 @@ const mcmetaTarballUrl = 'https://github.com/misode/mcmeta/tarball'
 const vanillaMcdocUrl = 'https://raw.githubusercontent.com/SpyglassMC/vanilla-mcdoc'
 const changesUrl = 'https://raw.githubusercontent.com/misode/technical-changes'
 const versionDiffUrl = 'https://mcmeta-diff.misode.workers.dev'
-const whatsNewUrl = 'https://whats-new.misode.workers.dev'
 
 type McmetaTypes = 'summary' | 'data' | 'data-json' | 'assets' | 'assets-json' | 'registries' | 'atlas'
 
@@ -349,22 +347,6 @@ export interface WhatsNewItem {
 	url: string,
 	createdAt: string,
 	seenAt?: string,
-}
-
-export async function fetchWhatsNew(): Promise<WhatsNewItem[]> {
-	try {
-		const whatsNew = await cachedFetch<WhatsNewItem[]>(whatsNewUrl, { refresh: true })
-		const seenState = Store.getWhatsNewSeen()
-		for (const { id, time } of seenState) {
-			const item = whatsNew.find(i => i.id === id)
-			if (item) {
-				item.seenAt = time
-			}
-		}
-		return whatsNew
-	} catch (e) {
-		throw new Error(`Error occured while fetching what's new: ${message(e)}`)
-	}
 }
 
 interface FetchOptions<D> {

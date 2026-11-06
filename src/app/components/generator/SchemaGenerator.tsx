@@ -9,12 +9,12 @@ import { useModal } from '../../contexts/Modal.jsx'
 import { useSpyglass, watchSpyglassUri } from '../../contexts/Spyglass.jsx'
 import { AsyncCancel, useActiveTimeout, useAsync, useLocalStorage, useSearchParam } from '../../hooks/index.js'
 import type { VersionId } from '../../services/index.js'
-import { checkVersion, fetchDependencyMcdoc, fetchPreset, fetchRegistries, getSnippet, shareSnippet } from '../../services/index.js'
+import { fetchDependencyMcdoc, fetchPreset, fetchRegistries, getSnippet, shareSnippet } from '../../services/index.js'
 import { DEPENDENCY_URI } from '../../services/Spyglass.js'
 import { Store } from '../../Store.js'
 import { cleanUrl, genPath } from '../../Utils.js'
 import { FancyMenu } from '../FancyMenu.jsx'
-import { Ad, Btn, BtnMenu, ErrorPanel, FileCreation, FileView, Footer, HasPreview, Octicon, PreviewPanel, ProjectPanel, SourcePanel, TextInput, VersionSwitcher } from '../index.js'
+import { Ad, Btn, BtnMenu, ErrorPanel, FileCreation, FileView, Footer, Octicon, ProjectPanel, SourcePanel, TextInput, VersionSwitcher } from '../index.js'
 import { getRootDefault } from './McdocHelpers.js'
 
 export const SHARE_KEY = 'share'
@@ -311,21 +311,9 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 	const [copyActive, copySuccess] = useActiveTimeout()
 
 	const [previewShown, setPreviewShown] = useState(Store.getPreviewPanelOpen() ?? window.innerWidth > 800)
-	const hasPreview = HasPreview.includes(gen.id) && !(gen.id === 'worldgen/configured_feature' && checkVersion(version, '1.18'))
-	if (previewShown && !hasPreview) setPreviewShown(false)
+	if (previewShown) setPreviewShown(false)
 	let actionsShown = 2
-	if (hasPreview) actionsShown += 1
 	if (sourceShown) actionsShown += 2
-
-	const togglePreview = () => {
-		if (sourceShown) {
-			Analytics.hidePreview(gen.id, 'menu')
-		} else {
-			Analytics.showPreview(gen.id, 'menu')
-		}
-		Store.setPreviewPanelOpen(!previewShown)
-		setPreviewShown(!previewShown)
-	}
 
 	const [projectShown, setProjectShown] = useState(Store.getProjectPanelOpen() ?? false)
 	const toggleProjectShown = useCallback(() => {
@@ -415,9 +403,6 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 			<Footer donate={!gen.tags?.includes('partners')} />
 		</main>
 		<div class="popup-actions right-actions" style={`--offset: -${8 + actionsShown * 50}px;`}>
-			<div class={`popup-action action-preview${hasPreview ? ' shown' : ''} tooltipped tip-nw`} aria-label={locale(previewShown ? 'hide_preview' : 'show_preview')} onClick={togglePreview}>
-				{previewShown ? Octicon.x_circle : Octicon.play}
-			</div>
 			<div class={`popup-action action-share shown tooltipped tip-nw${shareLoading ? ' loading' : ''}`} aria-label={locale(shareLoading ? 'share.loading' : 'share')} onClick={share}>
 				{shareLoading ? Octicon.sync : Octicon.link}
 			</div>
@@ -430,9 +415,6 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 			<div class={'popup-action action-code shown tooltipped tip-nw'} aria-label={locale(sourceShown ? 'hide_output' : 'show_output')} onClick={toggleSource}>
 				{sourceShown ? Octicon.chevron_right : Octicon.code}
 			</div>
-		</div>
-		<div class={`popup-preview${previewShown ? ' shown' : ''}`}>
-			<PreviewPanel docAndNode={docAndNode} id={gen.id} shown={previewShown} />
 		</div>
 		<div class={`popup-source${sourceShown ? ' shown' : ''}`}>
 			<SourcePanel docAndNode={docAndNode} {...{doCopy, doDownload, doImport}} copySuccess={copySuccess} onError={setError} />

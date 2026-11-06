@@ -1,0 +1,398 @@
+
+use ::java::util::text::Text
+
+enum(string) RaidTier {
+	Tier_One = "TIER_ONE",
+	Tier_Two = "TIER_TWO",
+	Tier_Three = "TIER_THREE",
+	Tier_Four = "TIER_FOUR",
+	Tier_Five = "TIER_FIVE",
+	Tier_Six = "TIER_SIX",
+	Tier_Seven = "TIER_SEVEN",
+}
+
+enum(string) RaidType {
+	Normal = "NORMAL",
+	Fighting = "FIGHTING",
+	Flying = "FLYING",
+	Poison = "POISON",
+	Ground = "GROUND",
+	Rock = "ROCK",
+	Bug = "BUG",
+	Ghost = "GHOST",
+	Steel = "STEEL",
+	Fire = "FIRE",
+	Water = "WATER",
+	Grass = "GRASS",
+	Electric = "ELECTRIC",
+	Psychic = "PSYCHIC",
+	Ice = "ICE",
+	Dragon = "DRAGON",
+	Dark = "DARK",
+	Fairy = "FAIRY",
+	Stellar = "STELLAR",
+}
+
+enum(string) BaseFeatureLegacy {
+    Default = "DEFAULT",
+    Mega = "MEGA",
+    Tera = "TERA",
+    Dynamax = "DYNAMAX",
+}
+
+enum(string) BaseFeature {
+    Default = "default",
+    Mega = "mega",
+    Tera = "tera",
+    Dynamax = "dynamax",
+    #[since="0.11.0"] Shadow = "shadow",
+}
+
+type RaidFeature = (#[until="0.11.0"] BaseFeatureLegacy | #[since="0.11.0"] BaseFeature | #[since="0.11.0"] string)
+
+enum(string) Gender {
+    Male = "MALE",
+    Female = "FEMALE",
+    Genderless = "GENDERLESS"
+}
+
+enum(string) MovesetBuilder {
+	Best_Level_Up_Primary = "level_up_primary",
+	Best_Level_Up_Secondary = "level_up_secondary",
+	Best_Level_Up_Any = "level_up_any",
+	Best_TM_Primary = "tm_primary",
+	Best_TM_Secondary = "tm_secondary",
+	Best_TM_Any = "tm_any",
+	Best_Move_Primary = "move_primary",
+	Best_Move_Secondary = "move_secondary",
+	Best_Move_Any = "move_any",
+	Random_Level_Up_Coverage = "level_up_coverage",
+	Random_TM_Coverage = "tm_coverage",
+	Random_Move_Coverage = "move_coverage",
+	Random_Offensive_TM = "offensive_tm",
+}
+
+type Move = (MovesetBuilder | string | [(MovesetBuilder | string)])
+
+struct Evs {
+    hp?: int @ 0..,
+    atk?: int @ 0..,
+    def?: int @ 0..,
+    spa?: int @ 0..,
+    spd?: int @ 0..,
+    spe?: int @ 0..,
+}
+
+struct CustomProperties {
+    name: string,
+    value: (string | int | boolean),
+}
+
+struct BaseProperties {
+    gender?: Gender,
+    ability?: string,
+    nature?: string,
+    level?: int @ 1..,
+    moves?: (#[until="0.12.1"] [string] @ 1..4 | #[since="0.12.1"] [Move] @ 1..4),
+    min_perfect_ivs?: int @ 0..6,
+    evs?: Evs,
+    held_item?: string,
+    aspects?: [string],
+    form?: string,
+    custom_properties?: [CustomProperties],
+    #[since="0.12.1"] dmax_level?: boolean,
+    gmax?: boolean,
+    #[since="0.11.4"] tera_type?: RaidType,
+}
+
+struct RewardProperties {
+	species: string @ 1..,
+	...BaseProperties,
+}
+
+struct BossProperties {
+    species?: string,
+	...BaseProperties,
+}
+
+struct UniqueKey {
+    item: string,
+    id: string
+}
+
+type Key = (string | UniqueKey)
+
+enum(string) NodeType {
+	Raid = "raid",
+	Recover = "recover",
+	Boss = "boss",
+}
+
+struct Node {
+	type: NodeType,
+	...cobblemonraiddens:node[[type]],
+}
+
+dispatch cobblemonraiddens:node[raid] to struct RaidNode {
+	bosses: [string],
+	can_catch?: boolean
+}
+
+enum(string) Terrain {
+    Electric_Terrain = "electricterrain",
+    Grassy_Terrain = "grassyterrain",
+    Misty_Terrain = "mistyterrain",
+    Psychic_Terrain = "psychicterrain",
+}
+
+enum(string) Weather {
+    Rain = "raindance",
+    Sandstorm = "sandstorm",
+    Snow = "snow",
+    Sun = "sunnyday",
+    Primordial_Sea = "primordialsea",
+    Desolate_Land = "desolateland",
+    Delta_Stream = "deltastream"
+}
+
+enum(string) ScriptTarget {
+    Player = "player",
+    Boss = "boss",
+}
+
+enum(string) CatchRateOperation {
+    Add = "add",
+    Multiply = "multiply",
+}
+
+struct StatBoosts {
+    hp?: int @ -12..12,
+    atk?: int @ -12..12,
+    def?: int @ -12..12,
+    spa?: int @ -12..12,
+    spd?: int @ -12..12,
+    spe?: int @ -12..12,
+}
+
+enum(string) ScriptType {
+    Shield = "shield",
+    Set_Terrain = "set_terrain",
+    Set_Weather = "set_weather",
+    Reset_Stats = "reset_stats",
+    Modify_Catch_Rate = "modify_catch_rate",
+    Heal = "heal",
+    Reduce_Timer = "reduce_timer",
+    Timer = "timer",
+    Use_Move = "use_move",
+    Player_Stats = "player_stats",
+    Boss_Stats = "boss_stats",
+    Forme_Change = "forme_change",
+    Mega_Evolve = "mega_evolve",
+    Dynamax = "dynamax",
+    Terastallize = "terastallize",
+    Add_Script = "add_script",
+    Scale = "scale",
+    Play_Sound = "play_sound",
+    With_Chance = "with_chance",
+    #[since="0.11.2"] Run_Command = "run_command",
+    #[since="0.11.7"] Clear_All_Stats = "clear_all_stats",
+}
+
+struct Script {
+	type: ScriptType,
+	...cobblemonraiddens:script[[type]],
+}
+
+struct ScriptMap {
+	values: struct { [string]: Script, },
+}
+
+dispatch cobblemonraiddens:script[shield] to struct ShieldScript {
+	apply?: boolean
+}
+
+dispatch cobblemonraiddens:script[set_terrain] to struct TerrainScript {
+	terrain: (string | Terrain)
+}
+
+dispatch cobblemonraiddens:script[set_weather] to struct WeatherScript {
+	weather: (string | Weather)
+}
+
+dispatch cobblemonraiddens:script[reset_stats] to struct ResetStatsScript {
+    target: ScriptTarget,
+}
+
+dispatch cobblemonraiddens:script[modify_catch_rate] to struct ModifyCatchRateScript {
+    value: float,
+    apply_to_all?: boolean,
+    operation: CatchRateOperation,
+}
+
+dispatch cobblemonraiddens:script[heal] to struct HealScript {
+    value: float @ 0..1,
+}
+
+dispatch cobblemonraiddens:script[reduce_timer] to struct ReduceTimerScript {
+    value: float @ 0..1,
+}
+
+dispatch cobblemonraiddens:script[timer] to struct TimerScript {
+    value: int @ 1..,
+}
+
+dispatch cobblemonraiddens:script[use_move] to struct UseMoveScript {
+    move: string,
+    target: int @ 0..1,
+}
+
+dispatch cobblemonraiddens:script[player_stats] to struct PlayerStatsScript {
+    /// Positive values lower the player's stats.
+    stats: StatBoosts,
+}
+
+dispatch cobblemonraiddens:script[boss_stats] to struct BossStatsScript {
+    stats: StatBoosts,
+}
+
+dispatch cobblemonraiddens:script[forme_change] to struct FormeChangeScript {
+    form: string,
+}
+
+dispatch cobblemonraiddens:script[mega_evolve] to struct MegaEvolveScript {}
+
+dispatch cobblemonraiddens:script[dynamax] to struct DynamaxScript {}
+
+dispatch cobblemonraiddens:script[terastallize] to struct TerastallizeScript {}
+
+dispatch cobblemonraiddens:script[add_script] to struct AddScriptScript {
+    trigger: string,
+    scripts: [Script],
+}
+
+dispatch cobblemonraiddens:script[scale] to struct ScaleScript {
+    scale: float @ 0<..,
+    rate?: float @ 0<..,
+}
+
+dispatch cobblemonraiddens:script[play_sound] to struct PlaySoundScript {
+    sound: string,
+    is_music?: boolean,
+}
+
+dispatch cobblemonraiddens:script[with_chance] to struct WithChanceScript {
+    chance: float @ 0..1,
+    scripts: [Script],
+}
+
+dispatch cobblemonraiddens:script[run_command] to struct RunCommandScript {
+    target?: string,
+    command: string,
+}
+
+dispatch cobblemonraiddens:script[clear_all_stats] to struct ClearAllStatsScript {
+    target: ScriptTarget,
+}
+
+enum(string) AI {
+    Random = "random",
+    Strong = "strong",
+    RCT = "rct",
+}
+
+type RaidAI = (string | AI)
+
+enum(string) RaidBattleFormat {
+    Singles = "SINGLES",
+    Doubles = "DOUBLES",
+    Triples = "TRIPLES",
+    Quadruples = "QUADRUPLES",
+    Pentuples = "PENTUPLES",
+    Sextuples = "SEXTUPLES",
+    Raid = "RAID",
+}
+
+struct BaseBoss {
+    /// Special raid gimmicks.
+    raid_feature?: RaidFeature,
+    /// Loot table id for additional loot from the raid.
+    loot_table?: string,
+    weight?: double,
+    /// The list of raid den structures and structure pools the boss can spawn in.
+    den?: [string],
+    /// A unique key required to enter the raid.
+    key?: Key,
+    boss_bar_text?: Text,
+    scale?: float,
+    /// Force the raid boss into a permanent Dynamax forme.
+    force_dynamax?: boolean,
+    music?: string,
+    #[since="0.11.0"] no_ai?: boolean,
+    #[since="0.14.0"] adventure?: [Node],
+    max_players?: int @ -1..,
+    max_clears?: int @ -1..,
+    ha_rate?: double @ 0..1,
+    max_cheers?: int @ -1..,
+    raid_party_size?: int @ 1..6,
+    health_multi?: int @ 1..,
+    multiplayer_health_multi?: float @ 1..,
+    shinyRate?: float @ -1..,
+    currency?: int @ 0..,
+    max_catches?: int @ -1..,
+    script?: ScriptMap,
+    raid_ai?: RaidAI,
+    marks?: [string],
+    lives?: int @ 1..,
+    players_share_lives?: boolean,
+    energy?: int @ 0..,
+    required_damage?: float @ 0..1,
+    catch_rate?: float @ 0..1,
+    #[since="0.14.0"] battle_format?: RaidBattleFormat,
+}
+
+dispatch minecraft:resource[cobblemonraiddens:raid/boss] to struct RaidBoss {
+    /// The base properties of the Raid Boss and Reward Pokemon.
+	pokemon: RewardProperties,
+	/// The properties which are added to the base properties for the Raid Boss only.
+	boss?: BossProperties,
+    raid_tier: RaidTier,
+    raid_type: RaidType,
+    ...BaseBoss,
+}
+
+struct AdditionBoss {
+    /// The base properties of the Raid Boss and Reward Pokemon.
+	pokemon?: BossProperties,
+	/// The properties which are added to the base properties for the Raid Boss only.
+	boss?: BossProperties,
+    raid_tier?: RaidTier,
+    raid_type?: RaidType,
+    ...BaseBoss,
+}
+
+dispatch minecraft:resource[cobblemonraiddens:raid/boss_additions] to struct BossAdditions {
+    // Larger numbers are loaded first.
+    priority?: int,
+    include?: [string],
+    exclude?: [string],
+    additions: AdditionBoss,
+    replace?: boolean,
+    suffix?: string,
+    force_apply?: boolean,
+    #[since="0.11.1"] extend_tags?: boolean,
+}
+
+struct Filter {
+    tier: [RaidTier],
+    type: [RaidType],
+    feature: [RaidFeature],
+    boss: [string],
+}
+
+dispatch minecraft:resource[cobblemonraiddens:raid/bucket] to struct RaidBucket {
+    include?: Filter,
+    exclude?: Filter,
+    adventure?: boolean,
+    biome: [string],
+    weight?: double,
+}

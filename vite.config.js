@@ -1,6 +1,6 @@
 import preact from '@preact/preset-vite'
 import html from '@rollup/plugin-html'
-import { env } from 'process'
+import { env } from 'node:process'
 import { defineConfig } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 const config = require('./src/config.json')
@@ -35,7 +35,7 @@ export default defineConfig({
 					title: '404',
 					template,
 				}),
-				...['generators', 'worldgen', 'partners', 'sounds', 'changelog', 'versions', 'guides', 'transformation', 'customized'].map(id => html({
+				...['generators'].map(id => html({
 					fileName: `${id}/index.html`,
 					title: `${English[`title.${id}`] ?? ''} - ${getVersions()}`,
 					template,
@@ -48,11 +48,6 @@ export default defineConfig({
 				...convertFormats.flatMap(s => convertFormats.filter(t => s !== t).map(t => [s, t])).map(([s, t]) => html({
 					fileName: `convert/${s}-to-${t}/index.html`,
 					title: `${English[`convert.format.${s}`]} to ${English[`convert.format.${t}`]} Converter - ${getVersions({ minVersion: '1.20.5' })}`,
-					template,
-				})),
-				...config.legacyGuides.map(g => html({
-					fileName: `guides/${g.id}/index.html`,
-					title: `${g.title} - ${getVersions()}`,
 					template,
 				})),
 			],

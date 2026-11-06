@@ -29,7 +29,7 @@ export function SourcePanel({ docAndNode, doCopy, doDownload, doImport, copySucc
 	const { service } = useSpyglass()
 	const [cIndent, setIndent] = useState(Store.getIndent())
 	const [cFormat, setFormat] = useState(Store.getFormat())
-	const [inline, setInline] = useLocalStorage('misode_output_inline', false, (s) => s === 'true', (b) => b ? 'true' : 'false')
+	const [inline] = useLocalStorage('misode_output_inline', false, (s) => s === 'true', (b) => b ? 'true' : 'false')
 	// const [sort, setSort] = useLocalStorage('misode_output_sort', 'schema')
 	const [highlighting, setHighlighting] = useState(Store.getHighlighting())
 	const [braceLoaded, setBraceLoaded] = useState(false)
@@ -225,7 +225,6 @@ export function SourcePanel({ docAndNode, doCopy, doDownload, doImport, copySucc
 			{window.matchMedia('(pointer: coarse)').matches && <>
 				<Btn icon="paste" onClick={importFromClipboard} />
 			</>}
-			<Btn label={locale('inline')} active={inline} onClick={() => setInline(!inline)} />
 			<BtnMenu icon="gear" tooltip={locale('output_settings')}>
 				{getSourceIndents().map(key =>
 					<Btn label={locale(`indentation.${key}`)} active={cIndent === key}
