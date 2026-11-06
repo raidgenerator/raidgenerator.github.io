@@ -383,10 +383,10 @@ dispatch minecraft:resource[cobblemonraiddens:raid/boss_additions] to struct Bos
 }
 
 struct Filter {
-    tier: [RaidTier],
-    type: [RaidType],
-    feature: [RaidFeature],
-    boss: [string],
+    tier?: [RaidTier],
+    type?: [RaidType],
+    feature?: [RaidFeature],
+    boss?: [string],
 }
 
 dispatch minecraft:resource[cobblemonraiddens:raid/bucket] to struct RaidBucket {
