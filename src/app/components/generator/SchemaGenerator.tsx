@@ -16,6 +16,7 @@ import { cleanUrl, genPath } from '../../Utils.js'
 import { FancyMenu } from '../FancyMenu.jsx'
 import { Ad, Btn, BtnMenu, ErrorPanel, FileCreation, FileView, Footer, Octicon, ProjectPanel, SourcePanel, TextInput, VersionSwitcher } from '../index.js'
 import { getRootDefault } from './McdocHelpers.js'
+import { Fragment } from 'preact'
 
 export const SHARE_KEY = 'share'
 const MIN_PROJECT_PANEL_WIDTH = 200

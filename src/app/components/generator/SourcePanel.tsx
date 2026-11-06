@@ -8,6 +8,7 @@ import { getSourceFormats, getSourceIndent, getSourceIndents, parseSource, strin
 import { Store } from '../../Store.js'
 import { message } from '../../Utils.js'
 import { Btn, BtnMenu } from '../index.js'
+import { Fragment } from 'preact'
 
 interface Editor {
 	getValue(): string

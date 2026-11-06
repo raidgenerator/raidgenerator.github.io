@@ -68,7 +68,7 @@ export class SpyglassClient {
 				if (typeof data === 'string') {
 					data = new TextEncoder().encode(data)
 				}
-				return sparkmd5.ArrayBuffer.hash(data)
+				return sparkmd5.ArrayBuffer.hash(toArrayBufferView(data).buffer)
 			},
 		},
 		fs: SpyglassClient.FS,
@@ -397,8 +397,14 @@ export class SpyglassService {
 	}
 }
 
+function toArrayBufferView(data: Uint8Array): Uint8Array<ArrayBuffer> {
+  const result = new Uint8Array(data.byteLength)
+  result.set(data)
+  return result
+}
+
 async function decompressBall(buffer: Uint8Array, options?: { stripLevel?: number }): Promise<core.DecompressedFile[]> {
-	const reader = new zip.ZipReader(new zip.BlobReader(new Blob([buffer])))
+	const reader = new zip.ZipReader(new zip.BlobReader(new Blob([toArrayBufferView(buffer)])))
 	const entries = await reader.getEntries()
 	return await Promise.all(entries.map(async e => {
 		const data = await e.getData?.(new zip.Uint8ArrayWriter())
@@ -434,7 +440,7 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		meta.registerDependencyProvider('@misode-mcdoc', async () => {
 			const uri: string = new core.Uri('downloads/misode-mcdoc.tar.gz', cacheRoot).toString()
 			const buffer = await compressBall([['builtin.mcdoc', builtinMcdoc]])
-			await core.fileUtil.writeFile(externals, uri, buffer)
+			await core.fileUtil.writeFile(externals, uri, toArrayBufferView(buffer))
 			return { type: 'tarball-file', uri }
 		})
 	} catch (e) {

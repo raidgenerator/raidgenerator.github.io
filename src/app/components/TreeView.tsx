@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'preact/hooks'
+import { Fragment } from 'preact'
 
 export type TreeViewGroupRenderer = (props: { name: string, open: boolean, onClick: () => void }) => JSX.Element
 export type TreeViewLeafRenderer<E> = (props: { entry: E }) => JSX.Element

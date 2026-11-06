@@ -40,7 +40,6 @@ export interface Config {
 	languages: ConfigLanguage[],
 	versions: ConfigVersion[],
 	generators: ConfigGenerator[],
-	legacyGuides: ConfigLegacyGuide[],
 }
 
 export default config as Config

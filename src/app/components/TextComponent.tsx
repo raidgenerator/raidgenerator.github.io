@@ -53,9 +53,9 @@ function visitComponent(component: unknown, consumer: (c: PartData) => void) {
 		}
 	} else if (typeof component === 'object' && component !== null) {
 		if ('text' in component) {
-			consumer(component)
+			consumer(component as PartData)
 		} else if ('translate' in component) {
-			consumer(component)
+			consumer(component as PartData)
 		} else if ('score' in component) {
 			consumer({ ...component, text: '123' })
 		} else if ('selector' in component) {
@@ -67,7 +67,7 @@ function visitComponent(component: unknown, consumer: (c: PartData) => void) {
 		}
 		if ('extra' in component) {
 			for (const e of (component as any).extra) {
-				visitComponent(e, c => consumer(inherit(c, component)))
+				visitComponent(e, c => consumer(inherit(c, component as PartData)))
 			}
 		}
 	}
@@ -113,7 +113,6 @@ function TextPart({ part, lang, oneline }: { part: PartData, lang: Record<string
 
 function resolveTranslate(translate: string, fallback: string | undefined, with_: any[] | undefined, lang: Record<string, string>): string {
 	const str = lang[translate] ?? fallback ?? translate
-	if (typeof str !== 'string') return translate
 	const params = with_?.map((c): string => {
 		if (typeof c === 'string' || typeof c === 'number') return `${c}`
 		if (c.text) return c.text

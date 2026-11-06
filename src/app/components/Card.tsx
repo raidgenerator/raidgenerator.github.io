@@ -1,4 +1,5 @@
 import type { ComponentChildren } from 'preact'
+import { Fragment } from 'preact'
 
 interface Props {
 	title?: ComponentChildren,

@@ -4,6 +4,7 @@ import config from '../../Config.js'
 import { useLocale, useVersion } from '../../contexts/index.js'
 import { checkVersion } from '../../services/Versions.js'
 import { GeneratorCard, TextInput, VersionSwitcher } from '../index.js'
+import { Fragment } from 'preact'
 
 interface Props {
 	path?: string,

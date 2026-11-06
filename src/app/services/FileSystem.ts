@@ -126,7 +126,7 @@ export class IndexedDbFileSystem implements core.ExternalFileSystem {
 			}
 		})
 	}
-	async readFile(location: core.FsLocation): Promise<Uint8Array> {
+  async readFile(location: core.FsLocation): Promise<Uint8Array<ArrayBuffer>> {
 		location = location.toString()
 		const db = await this.db
 		return new Promise((res, rej) => {

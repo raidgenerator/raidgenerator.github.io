@@ -3,6 +3,7 @@ import { Footer, GeneratorCard, ToolGroup } from '../components/index.js'
 import { useLocale, useTitle } from '../contexts/index.js'
 import { useMediaQuery } from '../hooks/index.js'
 import { Store } from '../Store.js'
+import { Fragment } from 'preact'
 
 const MIN_FAVORITES = 2
 const MAX_FAVORITES = 5

@@ -6,6 +6,7 @@ import { Analytics } from './Analytics.js'
 import { Header } from './components/index.js'
 import { Generator, Generators, Home } from './pages/index.js'
 import { cleanUrl } from './Utils.js'
+import { Fragment } from 'preact'
 
 export function App() {
 	const changeRoute = (e: RouterOnChangeArgs) => {

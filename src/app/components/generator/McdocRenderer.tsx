@@ -19,6 +19,7 @@ import { generateColor, hexId, intToHexRgb, randomInt, randomSeed } from '../../
 import { Btn } from '../Btn.jsx'
 import { Octicon } from '../Octicon.jsx'
 import { formatIdentifier, getCategory, getChange, getDefault, getItemType, isDefaultCollapsedType, isFixedList, isInlineTuple, isListOrArray, isNumericType, isSelectRegistry, quickEqualTypes, simplifyType } from './McdocHelpers.js'
+import { Fragment } from 'preact'
 
 export interface McdocContext extends core.CheckerContext {
 	makeEdit: MakeEdit

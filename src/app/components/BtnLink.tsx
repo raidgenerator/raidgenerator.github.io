@@ -1,4 +1,5 @@
 import { Octicon } from './index.js'
+import { Fragment } from 'preact'
 
 interface Props {
 	link?: string,
