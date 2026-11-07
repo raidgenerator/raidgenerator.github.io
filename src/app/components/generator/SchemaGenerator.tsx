@@ -113,7 +113,7 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
         } else {
             text = await service.readFile(uri)
             if (text === undefined) {
-                const node = getRootDefault(gen.root ?? gen.id, service.getCheckerContext())
+                const node = getRootDefault(gen.id, service.getCheckerContext())
                 text = service.formatNode(node, uri)
                 await service.writeFile(uri, text)
             }
@@ -141,7 +141,7 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
             return
         }
         Analytics.resetGenerator(gen.id, 1, 'menu')
-        const node = getRootDefault(gen.root ?? gen.id, service.getCheckerContext())
+        const node = getRootDefault(gen.id, service.getCheckerContext())
         const newText = service.formatNode(node, uri)
         await service.writeFile(uri, newText)
     }
@@ -374,7 +374,7 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
     const newEmptyFile = useCallback(async () => {
         if (service) {
             const unsavedUri = service.getUnsavedFileUri(gen)
-            const node = getRootDefault(gen.root ?? gen.id, service.getCheckerContext())
+            const node = getRootDefault(gen.id, service.getCheckerContext())
             const text = service.formatNode(node, unsavedUri)
             await service.writeFile(unsavedUri, text)
         }
