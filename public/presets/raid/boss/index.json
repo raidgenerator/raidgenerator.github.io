@@ -1,0 +1,87 @@
+{
+    "Regular": {
+        "pokemon": {
+            "species": "charizard",
+            "moves": [
+                "flareblitz",
+                "dragonclaw",
+                "airslash",
+                ["tm_coverage", "offensive_tm", "move_any"]
+            ]
+        },
+        "raid_tier": "TIER_FIVE",
+        "raid_type": "FIRE",
+        "weight": 20.0
+    },
+    "Regional Variant": {
+        "pokemon": {
+            "species": "ninetales",
+            "moves": [
+                "blizzard",
+                "aurorabeam",
+                ["move_secondary", "move_any"],
+                ["tm_coverage", "offensive_tm", "move_any"]
+            ],
+            "custom_properties": [
+                {
+                    "name": "alolan",
+                    "value": true
+                }
+            ]
+        },
+        "raid_tier": "TIER_FOUR",
+        "raid_type": "ICE",
+        "weight": 20.0
+    },
+    "Mega X": {
+        "pokemon": {
+            "species": "mewtwo",
+            "moves": [
+                "psystrike",
+                "psychocut",
+                "brickbreak",
+                ["tm_coverage", "offensive_tm", "move_any"]
+            ]
+        },
+        "raid_tier": "TIER_SEVEN",
+        "raid_type": "PSYCHIC",
+        "weight": 10.0,
+        "raid_feature": "MEGA",
+        "loot_table": "cobblemonraiddens:raid/boss/mewtwo_mega_x",
+        "boss": {
+            "custom_properties": [
+                {
+                    "name": "mega_evolution",
+                    "value": "mega_x"
+                }
+            ]
+        }
+    },
+    "Gigantamax": {
+        "pokemon": {
+            "species": "pikachu",
+            "moves": [
+                "thunderbolt",
+                "irontail",
+                ["tm_coverage", "offensive_tm", "move_any"],
+                ["tm_coverage", "offensive_tm", "move_any"]
+            ],
+            "gmax": true
+        },
+        "boss": {
+            "custom_properties": [
+                {
+                    "name": "dynamax_form",
+                    "value": "gmax"
+                }
+            ]
+        },
+        "raid_tier": "TIER_SEVEN",
+        "raid_type": "ELECTRIC",
+        "weight": 20.0,
+        "raid_feature": "DYNAMAX",
+        "den": [
+            "cobblemonraiddens:raid_den/dynamax"
+        ]
+    }
+}

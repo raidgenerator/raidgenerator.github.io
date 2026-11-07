@@ -99,6 +99,7 @@ struct BaseProperties {
     held_item?: string,
     aspects?: [string],
     form?: string,
+    /// Assigns all custom forms and aspects of the Pokemon
     custom_properties?: [CustomProperties],
     #[since="0.12.1"] dmax_level?: boolean,
     gmax?: boolean,
@@ -331,20 +332,26 @@ struct BaseBoss {
     #[since="0.14.0"] adventure?: [Node],
     max_players?: int @ -1..,
     max_clears?: int @ -1..,
+    /// The hidden ability rate for raid bosses
     ha_rate?: double @ 0..1,
     max_cheers?: int @ -1..,
+    /// The maximum number of Pokemon a player can bring to the raid battle
     raid_party_size?: int @ 1..6,
     health_multi?: int @ 1..,
+    /// A multiplier for extra HP based on the raid boss's base (post-multiplier) HP for every new player that joins
     multiplayer_health_multi?: float @ 1..,
     shinyRate?: float @ -1..,
     currency?: int @ 0..,
+    /// The maximum number of players that can catch the raid boss
     max_catches?: int @ -1..,
     script?: ScriptMap,
     raid_ai?: RaidAI,
     marks?: [string],
     lives?: int @ 1..,
     players_share_lives?: boolean,
+    /// How much raid energy the raid will give to a player's raid shard
     energy?: int @ 0..,
+    /// The damage threshold a player must meet to receive the rewards
     required_damage?: float @ 0..1,
     catch_rate?: float @ 0..1,
     #[since="0.14.0"] battle_format?: RaidBattleFormat,
@@ -392,7 +399,8 @@ struct Filter {
 dispatch minecraft:resource[cobblemonraiddens:raid/bucket] to struct RaidBucket {
     include?: Filter,
     exclude?: Filter,
-    adventure?: boolean,
+    #[since="0.14.0"] adventure?: boolean,
+    /// Add `*` to include all biomes
     biome: [string],
     weight?: double,
 }

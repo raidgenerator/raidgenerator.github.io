@@ -6,6 +6,8 @@ import { checkVersion } from './Versions.js'
 const CACHE_NAME = 'misode-v2'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
 const CACHE_PATCH = 'misode_cache_patch'
+const CUSTOM_NAMESPACE = 'cobblemonraiddens:'
+const CUSTOM_DIRS = ['raid/boss', 'raid/boss_additions', 'raid/bucket']
 
 declare var __LATEST_VERSION__: string
 export const latestVersion = __LATEST_VERSION__ ?? ''
@@ -20,6 +22,11 @@ type McmetaTypes = 'summary' | 'data' | 'data-json' | 'assets' | 'assets-json' |
 interface RefInfo {
 	dynamic?: boolean
 	ref?: string
+}
+
+function customPresetDir(registry: string): string | undefined {
+    const dir = registry.startsWith(CUSTOM_NAMESPACE) ? registry.slice(CUSTOM_NAMESPACE.length) : registry
+    return CUSTOM_DIRS.includes(dir) ? `/presets/${dir}` : undefined
 }
 
 function mcmeta(version: RefInfo, type: McmetaTypes, tarball?: boolean) {
@@ -76,6 +83,14 @@ export async function fetchRegistries(versionId: VersionId) {
 		for (const id in data) {
 			result.set(id, data[id].map((e: string) => 'minecraft:' + e))
 		}
+        for (const dir of CUSTOM_DIRS) {
+            try {
+                const index = await cachedFetch<Record<string, unknown>>(`/presets/${dir}/index.json`, { refresh: true })
+                result.set(CUSTOM_NAMESPACE + dir, Object.keys(index))
+            } catch (e) {
+                console.warn(`Could not load presets for ${dir}:`, message(e))
+            }
+        }
 		return result
 	} catch (e) {
 		throw new Error(`Error occurred while fetching registries: ${message(e)}`)
@@ -133,6 +148,14 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 	console.debug(`[fetchPreset] ${versionId} ${registry} ${id}`)
 	const version = config.versions.find(v => v.id === versionId)!
 	await validateCache(version)
+
+    const dir = customPresetDir(registry)
+    if (dir) {
+        const data = await cachedFetch<Record<string, unknown>>(`${dir}/index.json`, { refresh: true })
+        if (!(id in data)) throw new Error(`Unknown preset ${id}`)
+        return JSON.stringify(data[id], null, 2)
+    }
+
 	try {
 		let url
 		if (id.startsWith('immersive_weathering:')) {
@@ -152,6 +175,13 @@ export async function fetchAllPresets(versionId: VersionId, registry: string) {
 	console.debug(`[fetchAllPresets] ${versionId} ${registry}`)
 	const version = config.versions.find(v => v.id === versionId)!
 	await validateCache(version)
+
+    const dir = customPresetDir(registry)
+    if (dir) {
+        const data = await cachedFetch<Record<string, unknown>>(`${dir}/index.json`, { refresh: true })
+        return new Map<string, unknown>(Object.entries(data))
+    }
+
 	try {
 		const type = ['atlas', 'block_definition', 'item_definition', 'model', 'font', 'lang', 'equipment', 'post_effect'].includes(registry) ? 'assets' : 'data'
 		return new Map<string, unknown>(Object.entries(await cachedFetch(`${mcmeta(version, 'summary')}/${type}/${registry}/data.min.json`)))
