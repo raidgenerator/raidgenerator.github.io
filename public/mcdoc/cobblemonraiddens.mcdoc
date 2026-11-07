@@ -467,7 +467,7 @@ struct RaidLootFunction {
 
 enum(string) RaidConditionType {
     RaidPouchCondition = "cobblemonraiddens:raid_pouch_condition",
-    BonusLootCondition = "cobblemonraiddens:bonus_loot_condition"
+    BonusLootCondition = "cobblemonraiddens:bonus_loot_condition",
     AnyOf = "minecraft:any_of",
 	AllOf = "minecraft:all_of",
 	BlockStateProperty = "minecraft:block_state_property",

@@ -112,10 +112,16 @@ export const LootTablePreview = ({ docAndNode }: PreviewProps) => {
                 </div>
                 <div class="btn btn-input" onClick={e => e.stopPropagation()}>
                     <span>{locale('preview.raid_feature')}</span>
-                    <TextInput value={feature} onChange={setFeature} />
+                    { checkVersion(version, '0.11.0')
+                        ? <TextInput value={feature} onChange={setFeature} />
+                        : <select value={feature} onChange={e => setFeature((e.target as HTMLSelectElement).value)} >
+                            {['default', 'dynamax', 'tera', 'mega'].map(v =>
+                                <option value={v}>{locale(`preview.raid_feature.${v}`)}</option>)}
+                        </select>
+                    }
                 </div>
                 <Btn icon={bonusLoot ? 'square_fill' : 'square'} label={locale('preview.bonus_loot')} onClick={e => {setBonusLoot(!bonusLoot); e.stopPropagation()}} />
-                <Btn icon={isAdventure ? 'square_fill' : 'square'} label={locale('preview.is_adventure')} onClick={e => {setAdventure(!isAdventure); e.stopPropagation()}} />
+                { checkVersion(version, '0.14.0') && (<Btn icon={isAdventure ? 'square_fill' : 'square'} label={locale('preview.is_adventure')} onClick={e => {setAdventure(!isAdventure); e.stopPropagation()}} />) }
 				<Btn icon={mixItems ? 'square_fill' : 'square'} label="Fill container randomly" onClick={e => {setMixItems(!mixItems); e.stopPropagation()}} />
 				<Btn icon={advancedTooltips ? 'square_fill' : 'square'} label="Advanced tooltips" onClick={e => {setAdvancedTooltips(!advancedTooltips); e.stopPropagation()}} />
 			</BtnMenu>
