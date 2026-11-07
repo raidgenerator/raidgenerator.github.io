@@ -1754,6 +1754,11 @@ hr {
 	image-rendering: auto;
 }
 
+.item-display img.model-pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
 .item-display > svg:not(.item-count):not(.item-durability) {
   width: 81.25%;
   height: 62.5%;

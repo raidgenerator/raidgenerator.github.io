@@ -3,7 +3,7 @@ import { useLocale, useVersion } from '../../contexts/index.js'
 import { useAsync } from '../../hooks/useAsync.js'
 import { checkVersion, fetchAllPresets, fetchItemComponents } from '../../services/index.js'
 import { clamp, jsonToNbt, randomSeed, safeJsonParse } from '../../Utils.js'
-import { Btn, BtnMenu, NumberInput } from '../index.js'
+import { Btn, BtnMenu, NumberInput, TextInput } from '../index.js'
 import { ItemDisplay } from '../ItemDisplay.jsx'
 import { ItemDisplay1204 } from '../ItemDisplay1204.jsx'
 import type { PreviewProps } from './index.js'
@@ -20,7 +20,12 @@ export const LootTablePreview = ({ docAndNode }: PreviewProps) => {
 	const [luck, setLuck] = useState(0)
 	const [daytime, setDaytime] = useState(0)
 	const [weather, setWeather] = useState('clear')
-	const [mixItems, setMixItems] = useState(true)
+    const [tier, setTier] = useState<string | undefined>(undefined)
+    const [type, setType] = useState<string | undefined>(undefined)
+    const [feature, setFeature] = useState<string | undefined>(undefined)
+    const [bonusLoot, setBonusLoot] = useState(false)
+    const [isAdventure, setAdventure] = useState(false)
+	const [mixItems, setMixItems] = useState(false)
 	const [advancedTooltips, setAdvancedTooltips] = useState(true)
 	const overlay = useRef<HTMLDivElement>(null)
 
@@ -51,7 +56,7 @@ export const LootTablePreview = ({ docAndNode }: PreviewProps) => {
 			})
 		}
 		return generateLootTable(table, {
-			version, seed, luck, daytime, weather,
+			version, seed, luck, daytime, weather, tier, type, feature, bonusLoot, isAdventure,
 			stackMixer: mixItems ? 'container' : 'default',
 			getItemTag: (id) => (itemTags.get(id.replace(/^minecraft:/, '')) as any)?.values ?? [],
 			getLootTable: (id) => lootTables.get(id.replace(/^minecraft:/, '')),
@@ -61,7 +66,7 @@ export const LootTablePreview = ({ docAndNode }: PreviewProps) => {
 			getEnchantmentTag: (id) => (enchantmentTags?.get(id.replace(/^minecraft:/, '')) as any)?.values ?? [],
 			getItemComponents: (id) => new Map([...(itemComponents?.get(id.toString()) ?? new Map()).entries()].map(([k, v]) => [k, jsonToNbt(v)])),
 		})
-	}, [version, seed, luck, daytime, weather, mixItems, text, dependencies, loading])
+	}, [version, seed, luck, daytime, weather, tier, type, feature, bonusLoot, isAdventure, mixItems, text, dependencies, loading])
 
 	return <>
 		<div ref={overlay} class="preview-overlay">
@@ -91,6 +96,26 @@ export const LootTablePreview = ({ docAndNode }: PreviewProps) => {
 							<option value={v}>{locale(`preview.weather.${v}`)}</option>)}
 					</select>
 				</div>
+                <div class="btn btn-input" onClick={e => e.stopPropagation()}>
+                    <span>{locale('preview.raid_tier')}</span>
+                    <select value={tier} onChange={e => setTier((e.target as HTMLSelectElement).value)} >
+                        {['tier_one', 'tier_two', 'tier_three', 'tier_four', 'tier_five', 'tier_six', 'tier_seven'].map(v =>
+                            <option value={v}>{locale(`preview.raid_tier.${v}`)}</option>)}
+                    </select>
+                </div>
+                <div class="btn btn-input" onClick={e => e.stopPropagation()}>
+                    <span>{locale('preview.raid_type')}</span>
+                    <select value={type} onChange={e => setType((e.target as HTMLSelectElement).value)} >
+                        {['normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel', 'fire', 'water', 'grass', 'electric', 'psychic', 'ice', 'dragon', 'dark', 'fairy', 'stellar'].map(v =>
+                            <option value={v}>{locale(`preview.raid_type.${v}`)}</option>)}
+                    </select>
+                </div>
+                <div class="btn btn-input" onClick={e => e.stopPropagation()}>
+                    <span>{locale('preview.raid_feature')}</span>
+                    <TextInput value={feature} onChange={setFeature} />
+                </div>
+                <Btn icon={bonusLoot ? 'square_fill' : 'square'} label={locale('preview.bonus_loot')} onClick={e => {setBonusLoot(!bonusLoot); e.stopPropagation()}} />
+                <Btn icon={isAdventure ? 'square_fill' : 'square'} label={locale('preview.is_adventure')} onClick={e => {setAdventure(!isAdventure); e.stopPropagation()}} />
 				<Btn icon={mixItems ? 'square_fill' : 'square'} label="Fill container randomly" onClick={e => {setMixItems(!mixItems); e.stopPropagation()}} />
 				<Btn icon={advancedTooltips ? 'square_fill' : 'square'} label="Advanced tooltips" onClick={e => {setAdvancedTooltips(!advancedTooltips); e.stopPropagation()}} />
 			</BtnMenu>

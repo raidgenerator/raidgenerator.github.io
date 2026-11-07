@@ -1,5 +1,11 @@
-
 use ::java::util::text::Text
+use ::java::data::loot::function::Conditions
+use ::java::data::loot::DynamicDrops
+use ::java::data::loot::LootCondition
+use ::java::data::loot::LootFunction
+use ::java::data::loot::LootContextParamSets
+use ::java::data::number_provider::IntNumberProviderRef
+use ::java::data::number_provider::FloatNumberProviderRef
 
 enum(string) RaidTier {
 	Tier_One = "TIER_ONE",
@@ -403,4 +409,168 @@ dispatch minecraft:resource[cobblemonraiddens:raid/bucket] to struct RaidBucket 
     /// Add `*` to include all biomes
     biome: [string],
     weight?: double,
+}
+
+enum(string) RaidFunctionType {
+	MaxMushroomsFunction = "cobblemonraiddens:max_mushrooms_function",
+	TeraShardsFunction = "cobblemonraiddens:tera_shards_function",
+	GemTypeFunction = "cobblemonraiddens:gem_type_function",
+	#[since="0.11.0"] ShadowShardsFunction = "cobblemonraiddens:shadow_shards_function",
+	#[since="0.11.0"] ScentsFunction = "cobblemonraiddens:scents_function",
+	#[since="0.12.1"] TMTypeFunction = "cobblemonraiddens:tm_type_function",
+	ApplyBonus = "minecraft:apply_bonus",
+	CopyName = "minecraft:copy_name",
+	CopyCustomData = "minecraft:copy_custom_data",
+	CopyComponents = "minecraft:copy_components",
+	CopyState = "minecraft:copy_state",
+	EnchantRandomly = "minecraft:enchant_randomly",
+	EnchantWithLevels = "minecraft:enchant_with_levels",
+	ExplorationMap = "minecraft:exploration_map",
+	ExplosionDecay = "minecraft:explosion_decay",
+	Filtered = "minecraft:filtered",
+	FurnaceSmelt = "minecraft:furnace_smelt",
+	FillPlayerHead = "minecraft:fill_player_head",
+	LimitCount = "minecraft:limit_count",
+	EnchantedCountIncrease = "minecraft:enchanted_count_increase",
+	Reference = "minecraft:reference",
+	Sequence = "minecraft:sequence",
+	SetAttributes = "minecraft:set_attributes",
+	SetBannerPattern = "minecraft:set_banner_pattern",
+	SetContents = "minecraft:set_contents",
+	ModifyContents = "minecraft:modify_contents",
+	SetItem = "minecraft:set_item",
+	SetCount = "minecraft:set_count",
+	SetDamage = "minecraft:set_damage",
+	SetEnchantments = "minecraft:set_enchantments",
+	SetInstrument = "minecraft:set_instrument",
+	SetLootTable = "minecraft:set_loot_table",
+	SetLore = "minecraft:set_lore",
+	SetName = "minecraft:set_name",
+	SetComponents = "minecraft:set_components",
+	SetCustomData = "minecraft:set_custom_data",
+	SetCustomModelData = "minecraft:set_custom_model_data",
+	SetPotion = "minecraft:set_potion",
+	SetStewEffect = "minecraft:set_stew_effect",
+	SetFireworks = "minecraft:set_fireworks",
+	SetFireworkExplosion = "minecraft:set_firework_explosion",
+	SetBookCover = "minecraft:set_book_cover",
+	SetWritableBookPages = "minecraft:set_writable_book_pages",
+	SetWrittenBookPages = "minecraft:set_written_book_pages",
+	ToggleTooltips = "minecraft:toggle_tooltips",
+	SetOminousBottleAmplifier = "minecraft:set_ominous_bottle_amplifier",
+}
+
+struct RaidLootFunction {
+	function: #[id] RaidFunctionType,
+	...minecraft:loot_function[[function]],
+}
+
+enum(string) RaidConditionType {
+    RaidPouchCondition = "cobblemonraiddens:raid_pouch_condition",
+    BonusLootCondition = "cobblemonraiddens:bonus_loot_condition"
+    AnyOf = "minecraft:any_of",
+	AllOf = "minecraft:all_of",
+	BlockStateProperty = "minecraft:block_state_property",
+	DamageSourceProperties = "minecraft:damage_source_properties",
+	EnchantmentActiveCheck = "minecraft:enchantment_active_check",
+	EntityProperties = "minecraft:entity_properties",
+	EntityScores = "minecraft:entity_scores",
+	Inverted = "minecraft:inverted",
+	KilledByPlayer = "minecraft:killed_by_player",
+	LocationCheck = "minecraft:location_check",
+	MatchTool = "minecraft:match_tool",
+	RandomChance = "minecraft:random_chance",
+	RandomChanceWithEnchantedBonus = "minecraft:random_chance_with_enchanted_bonus",
+	Reference = "minecraft:reference",
+	SurvivesExplosion = "minecraft:survives_explosion",
+	TableBonus = "minecraft:table_bonus",
+	TimeCheck = "minecraft:time_check",
+	ValueCheck = "minecraft:value_check",
+	WeatherCheck = "minecraft:weather_check",
+}
+
+struct RaidLootCondition {
+	condition: #[id] RaidConditionType,
+	...minecraft:loot_condition[[condition]],
+}
+
+dispatch cobblemonraiddens:loot_condition[cobblemonraiddens:raid_pouch_condition] to struct RaidPouchCondition {
+	apply: boolean,
+}
+dispatch cobblemonraiddens:loot_condition[cobblemonraiddens:bonus_loot_condition] to struct BonusLootCondition {
+	tier?: RaidTier,
+	type?: RaidType,
+	feature?: string,
+	isAdventure?: boolean,
+}
+
+enum(string) RaidEntryType {
+	Empty = "minecraft:empty",
+	Dynamic = "minecraft:dynamic",
+	Item = "minecraft:item",
+	LootTable = "minecraft:loot_table",
+	Tag = "minecraft:tag",
+	Alternatives = "minecraft:alternatives",
+	Group = "minecraft:group",
+	Sequence = "minecraft:sequence",
+}
+
+struct RaidLootPoolEntry {
+	type: #[id] RaidEntryType,
+	...cobblemonraiddens:loot_pool_entry[[type]],
+}
+
+dispatch cobblemonraiddens:loot_pool_entry[empty] to RaidSingletonEntry
+
+struct RaidEntryBase {
+	conditions?: [RaidLootCondition],
+}
+
+struct RaidSingletonEntry {
+	weight?: int @ 1..,
+	quality?: int,
+	...RaidEntryBase,
+	functions?: [RaidLootFunction],
+}
+
+struct RaidCompositeEntry {
+	children: [RaidSingletonEntry] @ 1..,
+	...RaidEntryBase,
+}
+
+dispatch cobblemonraiddens:loot_pool_entry[empty] to RaidSingletonEntry
+dispatch cobblemonraiddens:loot_pool_entry[dynamic] to struct RaidDynamicEntry {
+	name: #[id] DynamicDrops,
+	...RaidSingletonEntry,
+}
+dispatch cobblemonraiddens:loot_pool_entry[item] to struct RaidItemEntry {
+	name: #[id="item"] string,
+	...RaidSingletonEntry,
+}
+dispatch cobblemonraiddens:loot_pool_entry[loot_table] to struct RaidLootTableEntry {
+	value: (#[id="loot_table"] string | RaidLootTable),
+	...RaidSingletonEntry,
+}
+dispatch cobblemonraiddens:loot_pool_entry[tag] to struct RaidTagEntry {
+	name: #[id(registry="item",tags="implicit")] string,
+	expand: boolean,
+	...RaidSingletonEntry,
+}
+dispatch cobblemonraiddens:loot_pool_entry[alternatives] to RaidCompositeEntry
+dispatch cobblemonraiddens:loot_pool_entry[group] to RaidCompositeEntry
+dispatch cobblemonraiddens:loot_pool_entry[sequence] to RaidCompositeEntry
+
+struct RaidLootPool {
+	rolls: IntNumberProviderRef,
+	bonus_rolls?: FloatNumberProviderRef,
+	entries: [RaidLootPoolEntry],
+	functions?: [RaidLootFunction],
+	conditions?: [RaidLootCondition],
+}
+
+dispatch minecraft:resource[cobblemonraiddens:loot_table/raid/tier] to struct RaidLootTable {
+	type?: #[id] LootContextParamSets,
+	pools?: [RaidLootPool],
+	functions?: [RaidLootFunction],
+	random_sequence?: #[id(registry="random_sequence",definition=true)] string,
 }

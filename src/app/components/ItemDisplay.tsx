@@ -51,8 +51,8 @@ export function ItemDisplay({ item, slotDecoration, tooltip, advancedTooltip }: 
 		<RenderedItem item={resolvedItem} baseComponents={baseComponents} />
 		{item.count !== 1 && <>
 			<svg class="item-count" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMinYMid meet">
-				<text x="95" y="93" font-size="50" textAnchor="end" fontFamily="MinecraftSeven" fill="#373737">{item.count}</text>
-				<text x="90" y="88" font-size="50" textAnchor="end" fontFamily="MinecraftSeven" fill="#ffffff">{item.count}</text>
+				<text x="95" y="93" font-size="50" text-anchor="end" font-family="MinecraftSeven" fill="#373737">{item.count}</text>
+				<text x="90" y="88" font-size="50" text-anchor="end" font-family="MinecraftSeven" fill="#ffffff">{item.count}</text>
 			</svg>
 		</>}
 		{slotDecoration && <>
@@ -84,10 +84,11 @@ function RenderedItem({ item, baseComponents }: ResolvedProps) {
 		}
 		return renderItem(version, item, baseComponents)
 	}, [version, item, baseComponents])
+    const isCustom = src?.startsWith('/items/')
 
 	if (src) {
 		return <>
-			<img src={src} alt={item.id.toString()} class="model" draggable={false} />
+			<img src={src} alt={item.id.toString()} class={isCustom ? 'model model-pixelated' : 'model'} draggable={false} />
 			{item.hasFoil() && <div class="item-glint" style={{'--mask-image': `url("${src}")`}}></div>}
 		</>
 	}

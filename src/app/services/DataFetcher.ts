@@ -7,7 +7,7 @@ const CACHE_NAME = 'raidgenerator-v1'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
 const CACHE_PATCH = 'misode_cache_patch'
 const CUSTOM_NAMESPACE = 'cobblemonraiddens:'
-const CUSTOM_DIRS = ['raid/boss', 'raid/boss_additions', 'raid/bucket']
+const CUSTOM_DIRS = ['raid/boss', 'raid/boss_additions', 'raid/bucket', 'loot_table/raid/tier']
 
 declare var __LATEST_VERSION__: string
 export const latestVersion = __LATEST_VERSION__ ?? ''

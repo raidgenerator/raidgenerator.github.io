@@ -40,8 +40,8 @@ export function ItemDisplay1204({ item, slotDecoration, tooltip, advancedTooltip
 		<ItemItself item={item} />
 		{item.count !== 1 && <>
 			<svg class="item-count" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMinYMid meet">
-				<text x="95" y="93" font-size="50" textAnchor="end" fontFamily="MinecraftSeven" fill="#373737">{item.count}</text>
-				<text x="90" y="88" font-size="50" textAnchor="end" fontFamily="MinecraftSeven" fill="#ffffff">{item.count}</text>
+				<text x="65" y="93" font-size="50" text-anchor="end" font-family="MinecraftSeven" fill="#373737">{item.count}</text>
+				<text x="60" y="88" font-size="50" text-anchor="end" font-family="MinecraftSeven" fill="#ffffff">{item.count}</text>
 			</svg>
 		</>}
 		{slotDecoration && <>

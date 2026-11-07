@@ -43,6 +43,7 @@ function PopularGenerators() {
 		<GeneratorCard minimal id="cobblemonraiddens:raid/boss" />
 		<GeneratorCard minimal id="cobblemonraiddens:raid/boss_additions" />
 		<GeneratorCard minimal id="cobblemonraiddens:raid/bucket" />
+        <GeneratorCard minimal id="cobblemonraiddens:loot_table/raid/tier" />
 	</ToolGroup>
 }
 

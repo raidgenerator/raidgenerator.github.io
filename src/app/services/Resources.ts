@@ -31,6 +31,21 @@ export async function getResources(version: VersionId, itemComponents: Map<strin
 const RENDER_SIZE = 128
 const ItemRenderCache = new Map<string, Promise<string>>()
 
+function customTextureUrl(id: string) {
+    const [ns, path] = id.split(':')
+    if (!path || ns === 'minecraft') return undefined
+    return `/items/${ns}/${path}.png`
+}
+
+function probeImage(src: string) {
+    return new Promise<boolean>(res => {
+        const img = new Image()
+        img.onload = () => res(true)
+        img.onerror = () => res(false)
+        img.src = src
+    })
+}
+
 export async function renderItem(version: VersionId, item: ItemStack, baseComponents: Map<string, Map<string, unknown>>) {
 	const cache_key = `${version} ${item.toString()}`
 	const cached = ItemRenderCache.get(cache_key)
@@ -39,6 +54,9 @@ export async function renderItem(version: VersionId, item: ItemStack, baseCompon
 	}
 
 	const promise = (async () => {
+        const custom = customTextureUrl(item.id.toString())
+        if (custom && await probeImage(custom)) return custom
+
 		const canvas = document.createElement('canvas')
 		canvas.width = RENDER_SIZE
 		canvas.height = RENDER_SIZE

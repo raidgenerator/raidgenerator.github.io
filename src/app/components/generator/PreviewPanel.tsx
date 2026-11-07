@@ -5,7 +5,7 @@ import { ErrorPanel } from '../ErrorPanel.jsx'
 import { LootTablePreview } from '../previews/index.js'
 import { Fragment } from 'preact'
 
-export const HasPreview = ['loot_table']
+export const HasPreview = ['loot_table', 'cobblemonraiddens:loot_table/raid/tier']
 
 type PreviewPanelProps = {
 	id: string,
@@ -38,7 +38,7 @@ type PreviewContentProps = {
 	shown: boolean,
 }
 export function PreviewContent({ id, docAndNode, shown }: PreviewContentProps) {
-	if (id === 'loot_table') {
+	if (id === 'loot_table' || id === 'cobblemonraiddens:loot_table/raid/tier') {
 		return <LootTablePreview {...{ docAndNode, shown }} />
 	}
 

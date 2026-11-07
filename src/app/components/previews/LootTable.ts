@@ -28,6 +28,11 @@ interface LootOptions extends ItemComponentsProvider {
     luck: number,
     daytime: number,
     weather: string,
+    tier: string | undefined,
+    type: string | undefined,
+    feature: string | undefined,
+    bonusLoot: boolean,
+    isAdventure: boolean,
     stackMixer: StackMixer,
     getItemTag(id: string): string[],
     getLootTable(id: string): any,
@@ -42,6 +47,11 @@ interface LootContext extends LootOptions {
     luck: number
     weather: string,
     dayTime: number,
+    tier: string | undefined,
+    type: string | undefined,
+    feature: string | undefined,
+    bonusLoot: boolean,
+    isAdventure: boolean
 }
 
 export function generateLootTable(lootTable: any, options: LootOptions) {
@@ -140,6 +150,11 @@ function createLootContext(options: LootOptions): LootContext {
         luck: options.luck,
         weather: options.weather,
         dayTime: options.daytime,
+        tier: options.tier,
+        type: options.type,
+        feature: options.feature,
+        bonusLoot: options.bonusLoot,
+        isAdventure: options.isAdventure
     }
 }
 
@@ -284,34 +299,36 @@ function composeFunctions(func: any): LootFunction {
     return (item, ctx) => {
         if (Array.isArray(func)) {
             for (const fn of func) {
-                composeFunctions(fn)
+                composeFunctions(fn)(item, ctx)
             }
         } else if (isObject(func) && testCondition(func.condition ?? func.conditions, ctx)) {
-            const type = (func.type ?? func.function)?.replace(/^minecrawft:/, '');
+            const type = (func.type ?? func.function)?.replace(/^minecraft:/, '');
             (LootFunctions[type]?.(func) ?? (i => i))(item, ctx)
         }
     }
 }
 
 const LootFunctions: Record<string, (params: any) => LootFunction> = {
-    // 'cobblemonraiddens:gem_type_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('cobblemon:normal_gem')
-    // },
-    // 'cobblemonraiddens:tm_type_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('cobblemon:blank_tm')
-    // },
-    // 'cobblemonraiddens:tera_shards_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('mega_showdown:stellar_tera_shard')
-    // },
-    // 'cobblemonraiddens:max_mushrooms_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('mega_showdown:max_mushroom')
-    // },
-    // 'cobblemonraiddens:shadow_shards_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('shadowedhearts:shadow_shard')
-    // },
-    // 'cobblemonraiddens:scents_function': ({ }) => (item) => {
-    //     item.id = Identifier.create('shadowedhearts:joy_scent')
-    // },
+    'cobblemonraiddens:max_mushrooms_function': ({ }) => (item) => {
+        item.id = Identifier.parse('mega_showdown:max_mushroom')
+    },
+    'cobblemonraiddens:tera_shards_function': ({ }) => (item, ctx) => {
+        const type = ctx.type ?? 'normal'
+        item.id = Identifier.parse(`mega_showdown:${type}_tera_shard`)
+    },
+    'cobblemonraiddens:gem_type_function': ({ }) => (item, ctx) => {
+        const type = ctx.type ?? 'normal'
+        item.id = Identifier.parse(`cobblemon:${type}_gem`)
+    },
+    'cobblemonraiddens:shadow_shards_function': ({ }) => (item) => {
+        item.id = Identifier.parse('shadowedhearts:shadow_shard')
+    },
+    'cobblemonraiddens:scents_function': ({ }) => (item) => {
+        item.id = Identifier.parse('shadowedhearts:joy_scent')
+    },
+    'cobblemonraiddens:tm_type_function': ({ }) => (item) => {
+        item.id = Identifier.parse('cobblemon:blank_tm')
+    },
     enchant_randomly: ({ options, only_compatible }) => (item, ctx) => {
         let enchantments = options
             ? getHomogeneousList(options, ctx.getEnchantmentTag)
@@ -564,6 +581,16 @@ function testCondition(condition: any, ctx: LootContext): boolean {
 }
 
 const LootConditions: Record<string, (params: any) => LootCondition> = {
+    'cobblemonraiddens:raid_pouch_condition': ({ tier, type, feature, isAdventure }) => (ctx) => {
+        const checkTier = tier === undefined || tier.toLocaleLowerCase() === ctx.tier
+        const checkType = type === undefined || type.toLocaleLowerCase() === ctx.type
+        const checkFeature = feature === undefined || feature.toLocaleLowerCase() === ctx.feature
+        const checkAdventure = isAdventure === undefined || isAdventure.toLocaleLowerCase() === ctx.isAdventure
+        return checkTier && checkType && checkFeature && checkAdventure
+    },
+    'cobblemonraiddens:bonus_loot_condition': ({ apply }) => (ctx) => {
+        return apply === ctx.bonusLoot
+    },
     alternative: params => LootConditions['any_of'](params),
     all_of: ({ terms }) => (ctx) => {
         if (!Array.isArray(terms) || terms.length === 0) return true

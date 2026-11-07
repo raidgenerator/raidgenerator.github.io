@@ -70,6 +70,7 @@
             "url": "raid-boss",
             "path": "raid/boss",
             "dependency": "cobblemonraiddens",
+            "minVersion": "0.1.0",
             "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Raid-Bosses#defining-a-raid-boss"
         },
         {
@@ -77,12 +78,21 @@
             "url": "raid-boss_additions",
             "path": "raid/boss_additions",
             "dependency": "cobblemonraiddens",
+            "minVersion": "0.1.0",
             "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Raid-Bosses#boss-additions"
         },
         {
             "id": "cobblemonraiddens:raid/bucket",
             "url": "raid-bucket",
             "path": "raid/bucket",
+            "dependency": "cobblemonraiddens",
+            "minVersion": "0.1.0",
+            "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Raid-Buckets"
+        },
+        {
+            "id": "cobblemonraiddens:loot_table/raid/tier",
+            "url": "loot-table",
+            "path": "loot_table/raid/tier",
             "dependency": "cobblemonraiddens",
             "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Raid-Buckets"
         }
