@@ -94,7 +94,7 @@
             "url": "loot-table",
             "path": "loot_table/raid/tier",
             "dependency": "cobblemonraiddens",
-            "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Raid-Buckets"
+            "wiki": "https://github.com/necro50n3/cobblemon-raiddens/wiki/Loot-%26-Loot-Tables#loot-tables"
         }
     ]
 }
