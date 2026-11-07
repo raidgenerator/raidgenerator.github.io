@@ -3,7 +3,7 @@ import { message } from '../Utils.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
 
-const CACHE_NAME = 'misode-v2'
+const CACHE_NAME = 'raidgenerator-v1'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
 const CACHE_PATCH = 'misode_cache_patch'
 const CUSTOM_NAMESPACE = 'cobblemonraiddens:'

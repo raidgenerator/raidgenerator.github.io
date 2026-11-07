@@ -110,6 +110,14 @@ export namespace Store {
 		if (projects) localStorage.setItem(ID_PROJECTS, JSON.stringify(projects))
 	}
 
+    export function setPreviewPanelOpen(open: boolean | undefined) {
+        if (open === undefined) {
+            localStorage.removeItem(ID_PREVIEW_PANEL_OPEN)
+        } else {
+            localStorage.setItem(ID_PREVIEW_PANEL_OPEN, JSON.stringify(open))
+        }
+    }
+
 	export function setProjectPanelOpen(open: boolean | undefined) {
 		if (open === undefined) {
 			localStorage.removeItem(ID_PROJECT_PANEL_OPEN)
