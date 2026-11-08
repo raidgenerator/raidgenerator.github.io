@@ -23,44 +23,19 @@ module.exports = {
 			},
 		],
 		'@typescript-eslint/prefer-readonly': 'warn',
-		'@typescript-eslint/quotes': [
+		quotes: [
 			'warn',
 			'single',
 			{
 				avoidEscape: true,
 			},
 		],
-		'@typescript-eslint/semi': [
+		semi: [
 			'warn',
 			'never',
 		],
-		'@typescript-eslint/indent': [
-			'warn',
-			'tab',
-		],
-		'@typescript-eslint/member-delimiter-style': [
-			'warn',
-			{
-				multiline: {
-					delimiter: 'comma',
-					requireLast: true,
-				},
-				singleline: {
-					delimiter: 'comma',
-					requireLast: false,
-				},
-				overrides: {
-					interface: {
-						multiline: {
-							delimiter: undefined,
-						},
-					},
-				},
-			},
-		],
-		'comma-dangle': 'off',
-		'@typescript-eslint/comma-dangle': ['warn', 'always-multiline'],
-		indent: 'off',
+		'comma-dangle': ['warn', 'always-multiline'],
+		indent: ['warn', 'tab'],
 		'eol-last': 'warn',
 		'no-fallthrough': 'warn',
 		'prefer-const': 'warn',
