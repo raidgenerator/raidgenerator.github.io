@@ -11,7 +11,7 @@ export function Generators({}: Props) {
 	return <main>
 		<div class="legacy-container">
 			<GeneratorList predicate={gen => !gen.tags?.includes('partners')} />
+            <Footer />
 		</div>
-		<Footer />
 	</main>
 }
