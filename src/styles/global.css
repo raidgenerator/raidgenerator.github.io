@@ -14,6 +14,7 @@
 	--accent-success: #1a7f37;
 	--accent-warning: #a36f1c;
 	--accent-danger: #bd2f2a;
+    --accent-discord: #5865F2;
 	--accent-donate: #bf3989;
 	--accent-site-1: #2da44e;
 	--accent-site-2: #2c974b;
@@ -277,6 +278,7 @@ footer {
 	flex-wrap: wrap;
 	padding: 50px 30px;
 	color: var(--text-3);
+    font-size: 17px;
 }
 
 footer > * {
@@ -307,6 +309,10 @@ footer svg {
 
 footer .donate svg {
 	fill: var(--accent-donate);
+}
+
+footer .discord svg {
+    fill: var(--accent-discord);
 }
 
 main {
